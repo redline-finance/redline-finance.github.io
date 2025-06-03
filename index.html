@@ -1,40 +1,363 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Yantramanav:wght@400;900&display=swap" rel="stylesheet">
-	<script>if(!sessionStorage.getItem("_swa")&&document.referrer.indexOf(location.protocol+"//"+location.host)!== 0){fetch("https://counter.dev/track?"+new URLSearchParams({referrer:document.referrer,screen:screen.width+"x"+screen.height,user:"rlfinance",utcoffset:"2"}))};sessionStorage.setItem("_swa","1");</script>
-        
-        <style>
-            html,body {
-                height: 100%;
-                margin: 0;
-                overflow: hidden;
-            }
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redline Finance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            body {
-                background: rgb(57,0,0);
-                background: linear-gradient(135deg, rgba(57,0,0,1) 0%, rgba(0,0,0,1) 20%, rgba(45,0,0,1) 100%);
-            }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0505 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
 
-            a {
-                color: red;
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        }
+
+        .logo h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 100;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            position: relative;
+            background: linear-gradient(45deg, #ffffff, #ff4444, #ffffff);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 4s ease-in-out infinite;
+        }
+
+        .logo .divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff4444, transparent);
+            margin: 0 auto 15px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .logo h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 200;
+            letter-spacing: 4px;
+            color: #f0f0f0;
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 80px;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out 1s forwards;
+        }
+
+        .contact {
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out 1.5s forwards;
+        }
+
+        .contact p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .contact a {
+            color: #ff4444;
+            text-decoration: none;
+            font-size: clamp(1rem, 2.2vw, 1.3rem);
+            font-weight: 400;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .contact a:hover {
+            color: #ff6666;
+            text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .contact a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 50%;
+            background: #ff4444;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .contact a:hover::after {
+            width: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scaleX(1.1);
+            }
+        }
+
+        .glow {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
             }
             
-        </style>
-
-        <title>redline.finance</title>
-    </head>
-
-    <body>
-        <div style="text-align: center; color: white">
-            <div style="margin-top: 100px"></div>
-            <span style="font-family: 'Yantramanav', sans-serif; font-weight: 900; font-size: 4em; letter-spacing: 3px; border-bottom: 5px solid red">&nbsp;&nbsp;redline&nbsp;&nbsp;</span><br>
-            <span style="font-family: 'Yantramanav', sans-serif; font-weight: 400; font-size: 4em; letter-spacing: 3px; ">finance</span>
-            <br><br><br>
-            <h2 style="color: white; font-family: 'Yantramanav', sans-serif; font-weight: 400;">Bringing the future of decentralized finances, today</h2>
-            <br>
-            <h3 style="color: white; font-family: 'Yantramanav', sans-serif; font-weight: 400;">Get in touch: <a href='m&#97;ilto&#58;&#105;nfo&#37;40&#114;&#37;65&#100;&#37;6&#67;&#105;ne&#46;f&#105;nan%6&#51;e'>info&#64;re&#100;li&#110;e&#46;f&#105;&#110;&#97;&#110;ce</a></h3>
+            .logo {
+                margin-bottom: 40px;
+            }
+            
+            .tagline {
+                margin-bottom: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="glow" id="glow"></div>
+    
+    <div class="container">
+        <div class="logo">
+            <h1>redline</h1>
+            <div class="divider"></div>
+            <h2>finance</h2>
         </div>
-    </body>
+        
+        <div class="tagline">
+            Bringing the future of decentralized finances, today
+        </div>
+        
+        <div class="contact">
+            <p>Get in touch:</p>
+            <a href="mailto:info@redline.finance">info@redline.finance</a>
+        </div>
+    </div>
+
+    <script>
+        // Configuración del canvas y partículas
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const glow = document.getElementById('glow');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        let mouse = { x: 0, y: 0 };
+        let mousePressed = false;
+        
+        // Clase Partícula
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                this.life = 1;
+                this.decay = Math.random() * 0.015 + 0.008;
+                this.size = Math.random() * 2.5 + 1.5;
+                this.originalSize = this.size;
+                this.color = `rgba(255, ${Math.floor(Math.random() * 80 + 68)}, ${Math.floor(Math.random() * 80 + 68)}, ${this.life})`;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.size = Math.max(0.1, this.originalSize * this.life); // Evitar tamaños negativos
+                this.color = `rgba(255, ${Math.floor(Math.random() * 80 + 68)}, ${Math.floor(Math.random() * 80 + 68)}, ${this.life})`;
+            }
+            
+            draw() {
+                if (this.size <= 0) return; // No dibujar si el tamaño es 0 o negativo
+                
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                
+                // Partícula principal
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                
+                // Efecto de brillo sutil
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 1.8, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 68, 68, ${this.life * 0.15})`;
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+        
+        // Crear partículas conectadas
+        function createConnectedParticles(x, y, count = 5) {
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count;
+                const distance = Math.random() * 50 + 20;
+                const px = x + Math.cos(angle) * distance;
+                const py = y + Math.sin(angle) * distance;
+                particles.push(new Particle(px, py));
+            }
+        }
+        
+        // Dibujar conexiones entre partículas cercanas
+        function drawConnections() {
+            ctx.strokeStyle = 'rgba(255, 68, 68, 0.2)';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.globalAlpha = (100 - distance/2) / 100;
+                        ctx.stroke();
+                    }
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+        
+        // Función de animación principal
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Actualizar y dibujar partículas
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Dibujar conexiones
+            if (particles.length > 1) {
+                drawConnections();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Event listeners
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            // Crear partículas ocasionalmente al mover el mouse
+            if (Math.random() < 0.08) {
+                particles.push(new Particle(mouse.x, mouse.y));
+            }
+        });
+        
+        window.addEventListener('click', (e) => {
+            createConnectedParticles(e.clientX, e.clientY, 8);
+        });
+        
+        window.addEventListener('mouseleave', () => {
+            // No action needed
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Crear partículas automáticamente para fondo base
+        setInterval(() => {
+            if (particles.length < 25) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
+            }
+        }, 2500);
+        
+        // Inicializar con algunas partículas
+        for (let i = 0; i < 15; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            particles.push(new Particle(x, y));
+        }
+        
+        // Iniciar animación
+        animate();
+    </script>
+</body>
 </html>
